@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { BookOpen, GraduationCap, ArrowLeft, Sparkles, CheckCircle2, ChevronRight, FileText } from 'lucide-react';
+import { BookOpen, GraduationCap, ArrowLeft, Sparkles, CheckCircle2, ChevronRight, FileText, User } from 'lucide-react';
 import libraryBg from '../assets/library-bg.jpg';
+import Logo from './Logo';
+import BulbToggle from './BulbToggle';
 
 const YEARS_DATA = [
   {
@@ -44,6 +46,7 @@ const YEARS_DATA = [
 const Home = ({ onSelectYearAndSemester }) => {
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedSemester, setSelectedSemester] = useState(null);
+  const [isLightOn, setIsLightOn] = useState(true);
 
   const handleYearSelect = (year) => {
     setSelectedYear(year);
@@ -64,16 +67,62 @@ const Home = ({ onSelectYearAndSemester }) => {
 
   return (
     <section className="relative min-h-screen w-full flex flex-col justify-center items-center overflow-hidden font-sans select-none">
-      {/* Background Image with Dark Vignette & Atmospheric Overlay */}
+      {/* Top Left Corner Brand Logo */}
+      <div className="absolute top-5 left-5 sm:top-8 sm:left-10 z-30">
+        <Logo />
+      </div>
+
+      {/* Top Right Controls: Bulb Light Toggle & Account Icon */}
+      <div className="absolute top-5 right-5 sm:top-8 sm:right-10 z-30 flex items-center gap-3 sm:gap-4">
+        {/* Bulb Toggle Slider */}
+        <BulbToggle 
+          isLightOn={isLightOn} 
+          onToggle={() => setIsLightOn((prev) => !prev)} 
+        />
+
+        {/* Round Account Icon */}
+        <button
+          type="button"
+          aria-label="Account Profile"
+          className="group relative flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/60 hover:bg-black/85 border border-white/30 hover:border-[#F59E0B] text-white shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-md transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+        >
+          <User className="w-5 h-5 sm:w-6 sm:h-6 text-gray-200 group-hover:text-[#F59E0B] transition-colors" />
+          <span className="absolute -bottom-8 right-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none text-xs font-semibold px-2 py-0.5 rounded bg-black/90 text-white border border-white/20 whitespace-nowrap shadow-md">
+            Account
+          </span>
+        </button>
+      </div>
+
+      {/* Background Image with Dynamic Lighting Effects */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 scale-105"
+        className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-700 ease-in-out scale-105 ${
+          isLightOn ? 'filter brightness-105 saturate-110' : 'filter brightness-75 saturate-75'
+        }`}
         style={{
           backgroundImage: `url(${libraryBg})`,
         }}
       >
-        {/* Multi-layered gradient overlay to match the warm dark library reference */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/60 to-black/85 backdrop-blur-[1px]" />
-        <div className="absolute inset-0 bg-radial from-transparent via-black/40 to-black/90" />
+        {/* Dynamic Multi-layered lighting overlay based on bulb state */}
+        <div 
+          className={`absolute inset-0 transition-opacity duration-700 ${
+            isLightOn 
+              ? 'bg-gradient-to-b from-black/55 via-amber-950/20 to-black/75 backdrop-blur-[0.5px]' 
+              : 'bg-gradient-to-b from-black/85 via-black/75 to-black/90 backdrop-blur-[1.5px]'
+          }`} 
+        />
+        
+        {/* Warm Ambient Lamp Glow when Bulb is ON */}
+        <div 
+          className={`absolute inset-0 transition-opacity duration-700 pointer-events-none ${
+            isLightOn ? 'opacity-100' : 'opacity-0'
+          }`}
+          style={{
+            background: 'radial-gradient(ellipse at 50% 25%, rgba(251, 191, 36, 0.25) 0%, rgba(245, 158, 11, 0.1) 40%, transparent 70%)'
+          }}
+        />
+
+        {/* Ambient Vignette */}
+        <div className="absolute inset-0 bg-radial from-transparent via-black/30 to-black/90 pointer-events-none" />
       </div>
 
       {/* Main Content Area */}
