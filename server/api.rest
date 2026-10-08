@@ -1,0 +1,213 @@
+### ============================================
+### VARIABLES
+### ============================================
+
+@baseUrl = http://localhost:5000/api
+@token = 
+@adminToken = 
+@noteId = 
+@subjectId = 
+
+### ============================================
+### 1. AUTHENTICATION TESTS
+### ============================================
+
+### Register a new user
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "password123",
+  "confirmPassword": "password123"
+}
+
+### Login as regular user
+# @name loginUser
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "password123"
+}
+
+### Login as admin (with secret key)
+# @name loginAdmin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "password123",
+  "adminKey": "admin_secret_password_123"
+}
+
+### Get current user (requires token)
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+
+### ============================================
+### 2. SUBJECT TESTS
+### ============================================
+
+### Get all subjects
+GET {{baseUrl}}/subjects
+
+### Get subjects by semester
+GET {{baseUrl}}/subjects/semester/2
+
+### Create subject (admin only)
+# @name createSubject
+POST {{baseUrl}}/subjects
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Data Structures",
+  "code": "CS201",
+  "semester": 2,
+  "description": "Learn about arrays, linked lists, trees, graphs"
+}
+
+### Update subject (admin only)
+PUT {{baseUrl}}/subjects/{{subjectId}}
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Data Structures & Algorithms",
+  "description": "Updated description"
+}
+
+### Delete subject (admin only)
+DELETE {{baseUrl}}/subjects/{{subjectId}}
+Authorization: Bearer {{adminToken}}
+
+### ============================================
+### 3. NOTE TESTS - CRUD OPERATIONS
+### ============================================
+
+### Get all notes
+GET {{baseUrl}}/notes
+
+### Get all notes with pagination
+GET {{baseUrl}}/notes?page=1&limit=10
+
+### Get notes with search filter
+GET {{baseUrl}}/notes?search=arrays&page=1&limit=10
+
+### Get notes by subject
+GET {{baseUrl}}/notes?subject={{subjectId}}&page=1
+
+### Get notes by topic
+GET {{baseUrl}}/notes?topic=Arrays&page=1
+
+### Get single note by ID
+GET {{baseUrl}}/notes/{{noteId}}
+
+### Create note (admin only)
+# @name createNote
+POST {{baseUrl}}/notes
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "title": "Introduction to Arrays",
+  "content": "Arrays are contiguous memory structures that store elements of the same type. They provide O(1) random access but have fixed size.",
+  "subject": "{{subjectId}}",
+  "topic": "Arrays",
+  "tags": ["Important", "Exam", "Basics"]
+}
+
+### Update note (admin only)
+PUT {{baseUrl}}/notes/{{noteId}}
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "title": "Arrays - Updated",
+  "content": "Updated content with more details...",
+  "topic": "Arrays & Sorting",
+  "tags": ["Important", "Exam"]
+}
+
+### Delete note (admin only)
+DELETE {{baseUrl}}/notes/{{noteId}}
+Authorization: Bearer {{adminToken}}
+
+### Archive note (soft delete)
+PATCH {{baseUrl}}/notes/{{noteId}}/archive
+Authorization: Bearer {{adminToken}}
+
+### ============================================
+### 4. ERROR HANDLING TESTS
+### ============================================
+
+### Test invalid token
+GET {{baseUrl}}/notes
+Authorization: Bearer invalid_token_here
+
+### Test expired token (if applicable)
+GET {{baseUrl}}/notes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDAwMDAwMDB9.invalid
+
+### Test missing token (should work for GET /notes)
+GET {{baseUrl}}/notes
+
+### Test admin access without admin key (should fail 403)
+POST {{baseUrl}}/notes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Test",
+  "content": "Test",
+  "subject": "{{subjectId}}",
+  "topic": "Test"
+}
+
+### Test invalid subject ID (should fail 400)
+POST {{baseUrl}}/notes
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "title": "Test",
+  "content": "Test",
+  "subject": "invalid_id",
+  "topic": "Test"
+}
+
+### Test missing required fields (should fail 400)
+POST {{baseUrl}}/notes
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "title": "Test"
+}
+
+### ============================================
+### 5. EDGE CASE TESTS
+### ============================================
+
+### Get non-existent note
+GET {{baseUrl}}/notes/000000000000000000000000
+
+### Delete already deleted note
+DELETE {{baseUrl}}/notes/000000000000000000000000
+Authorization: Bearer {{adminToken}}
+
+### Search with empty query
+GET {{baseUrl}}/notes?search=&page=1
+
+### Pagination with invalid page (out of bounds)
+GET {{baseUrl}}/notes?page=99999&limit=10
+
+### Pagination with page=0 (should fail 400)
+GET {{baseUrl}}/notes?page=0&limit=10
+
+### Get notes with multiple filters
+GET {{baseUrl}}/notes?search=array&subject={{subjectId}}&topic=Arrays&page=1

@@ -4,7 +4,7 @@ const Logo = ({ className = '', showSubtitle = true, lightMode = false }) => {
   return (
     <div className={`flex items-center gap-3 select-none group cursor-pointer ${className}`}>
       {/* Vector Logo Icon */}
-      <div className="relative w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
+      <div className="relative w-8 h-8 sm:w-11 sm:h-11 flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
         <svg
           viewBox="0 0 120 120"
           fill="none"
@@ -85,8 +85,8 @@ const Logo = ({ className = '', showSubtitle = true, lightMode = false }) => {
           <line x1="80" y1="81" x2="80" y2="84" stroke="#F59E0B" strokeWidth="2.5" strokeLinecap="round" />
           <line x1="69" y1="73" x2="72" y2="73" stroke="#F59E0B" strokeWidth="2.5" strokeLinecap="round" />
           <line x1="88" y1="73" x2="91" y2="73" stroke="#F59E0B" strokeWidth="2.5" strokeLinecap="round" />
-          <line x1="72" y1="65" x2="74" y2="67" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" />
-          <line x1="86" y1="79" x2="88" y2="81" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" />
+          <line x1="72" y1="65" x2="74" y2="67" stroke="#F59E0B" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1="86" y1="79" x2="88" y2="81" stroke="#F59E0B" strokeWidth="2.5" strokeLinecap="round" />
 
           {/* Book Spine Center */}
           <path d="M 56 56 L 56 94" stroke="#0A1D2C" strokeWidth="3" strokeLinecap="round" />
@@ -94,12 +94,12 @@ const Logo = ({ className = '', showSubtitle = true, lightMode = false }) => {
       </div>
 
       {/* Brand Typography */}
-      <div className="flex flex-col justify-center">
-        <span className={`text-xl sm:text-2xl font-black tracking-tight leading-none ${lightMode ? 'text-slate-900' : 'text-white'}`}>
+      <div className="flex flex-col justify-center min-w-0">
+        <span className={`text-base sm:text-2xl font-black tracking-tight leading-none ${lightMode ? 'text-slate-900' : 'text-white'}`}>
           Edu<span className="text-[#14B8A6]">Vault</span>
         </span>
         {showSubtitle && (
-          <span className="text-[9px] sm:text-[10px] font-bold tracking-[0.18em] text-teal-400/90 uppercase mt-0.5 leading-tight">
+          <span className="text-[7.5px] sm:text-[10px] font-bold tracking-tight sm:tracking-[0.18em] text-teal-400/90 uppercase mt-0.5 leading-tight block whitespace-normal sm:whitespace-nowrap">
            Less searching, more studying
           </span>
         )}

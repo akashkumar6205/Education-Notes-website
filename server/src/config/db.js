@@ -10,3 +10,5 @@ export const connectDB = async () => {
     // Do not exit process in dev so the server can still run even if local mongo is booting up
   }
 };
+
+
